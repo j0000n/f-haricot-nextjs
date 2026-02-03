@@ -1,14 +1,15 @@
-import { Suspense } from "react";
-import { CurrentUser } from "./current-user";
+"use client";
+
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
-      <h1>Haricot Web</h1>
-      <p>Convex client integration test.</p>
-      <Suspense fallback={<p>Loading user…</p>}>
-        <CurrentUser />
-      </Suspense>
+      <h2>{t("welcome.title")}</h2>
+      <p>{t("welcome.publicContent")}</p>
+      <p>{t("welcome.loginPrompt")}</p>
     </main>
   );
 }

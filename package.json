@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@convex-dev/auth": "^0.0.90",
-    "@haricot/convex-client": "git+https://github.com/j0000n/f-haricot-convex.git#path:packages/convex-client&branch=main",
+    "@haricot/convex-client": "file:../haricot-convex/packages/convex-client",
     "convex": "^1.28.0",
+    "i18next": "^25.8.1",
     "next": "14.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-i18next": "^16.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
