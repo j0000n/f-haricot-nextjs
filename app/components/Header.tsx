@@ -64,7 +64,8 @@ export function Header() {
           ) : isAuthenticated && user ? (
             <>
               <span>{user.email ?? user.name ?? "User"}</span>
-              <a href="/profile" style={{ textDecoration: "underline" }}>{t("profile.title")}</a>
+              <a href="/lists" style={{ textDecoration: "underline", marginRight: "1rem" }}>{t("tabs.lists")}</a>
+              <a href="/profile" style={{ textDecoration: "underline", marginRight: "1rem" }}>{t("profile.title")}</a>
               <button onClick={handleSignOut}>{t("profile.logOut")}</button>
             </>
           ) : (
