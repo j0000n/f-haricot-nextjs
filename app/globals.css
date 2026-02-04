@@ -10,4 +10,86 @@ body {
   margin: 0;
   background: #f7f6f2;
   color: #1c1c1c;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* Responsive CSS Grid Layout */
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 100%;
+}
+
+/* Breakpoint indicators for development */
+body {
+  border: 2px solid yellow; /* sm - mobile */
+}
+
+@media (min-width: 768px) {
+  body {
+    border-color: orange; /* md - tablet/small desktop */
+  }
+  
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    border-color: red; /* lg - desktop */
+  }
+  
+  .container {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1280px) {
+  body {
+    border-color: blue; /* xl - large desktop */
+  }
+  
+  .container {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1400px;
+  }
+}
+
+/* Semantic element styles */
+header {
+  padding: 1rem;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+main {
+  padding: 2rem;
+}
+
+section {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
 }

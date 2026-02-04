@@ -56,21 +56,21 @@ export function Header() {
 
   return (
     <header>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1><a href="/" style={{ textDecoration: "none", color: "inherit" }}>haricot</a></h1>
-        <div>
+        <nav>
           {isLoading ? (
             <span>{t("common.loading")}</span>
           ) : isAuthenticated && user ? (
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <>
               <span>{user.email ?? user.name ?? "User"}</span>
               <a href="/profile" style={{ textDecoration: "underline" }}>{t("profile.title")}</a>
               <button onClick={handleSignOut}>{t("profile.logOut")}</button>
-            </div>
+            </>
           ) : (
-            <div>
+            <>
               {step === "signIn" ? (
-                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <>
                   <input
                     type="email"
                     placeholder={t("auth.email")}
@@ -81,9 +81,9 @@ export function Header() {
                   <button onClick={handleSendCode} disabled={submitting || !email}>
                     {submitting ? t("auth.sending") : t("auth.sendCode")}
                   </button>
-                </div>
+                </>
               ) : (
-                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <>
                   <input
                     type="text"
                     placeholder={t("auth.codePlaceholder")}
@@ -96,11 +96,11 @@ export function Header() {
                     {submitting ? t("auth.verifying") : t("auth.verifyCode")}
                   </button>
                   <button onClick={() => setStep("signIn")}>{t("auth.changeEmail")}</button>
-                </div>
+                </>
               )}
-            </div>
+            </>
           )}
-        </div>
+        </nav>
       </div>
     </header>
   );
