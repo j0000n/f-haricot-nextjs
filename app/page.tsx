@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslation } from "@/i18n/useTranslation";
-import { Logo } from "@/components/Logo";
+import { AnimatedLogo } from "@/components/logo/AnimatedLogo";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main>
       <header style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <Logo width={200} height={200} />
+        <AnimatedLogo size={200} baseColor="#ff6b9d" />
         <h2>{t("welcome.title")}</h2>
       </header>
       

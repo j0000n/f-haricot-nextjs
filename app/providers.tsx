@@ -5,10 +5,11 @@ import { ConvexReactClient } from "convex/react";
 import type { ReactNode } from "react";
 import { useMemo, useEffect, useState } from "react";
 import { useConvexAuth } from "convex/react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@haricot/convex-client";
 import { TranslationProvider, changeLanguage, getCurrentLanguage } from "@/i18n/useTranslation";
 import { getBrowserLanguage } from "@/i18n/config";
+import { getPendingUserType, clearPendingUserType } from "@/utils/pendingUserType";
 
 export function Providers({ children }: { children: ReactNode }) {
   const client = useMemo(() => {
@@ -22,7 +23,9 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <ConvexAuthProvider client={client}>
       <TranslationProvider>
-        <LanguageSync>{children}</LanguageSync>
+        <LanguageSync>
+          <UserTypeSync>{children}</UserTypeSync>
+        </LanguageSync>
       </TranslationProvider>
     </ConvexAuthProvider>
   );
@@ -65,6 +68,43 @@ function LanguageSync({ children }: { children: ReactNode }) {
       }
     }
   }, [isAuthenticated, user?.preferredLanguage, initialized]);
+
+  return <>{children}</>;
+}
+
+// Component to sync pending user type to user profile
+function UserTypeSync({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useConvexAuth();
+  const user = useQuery(api.users.getCurrentUser);
+  const updateProfile = useMutation(api.users.updateProfile);
+
+  useEffect(() => {
+    if (!isAuthenticated || user === undefined) {
+      return;
+    }
+
+    const syncPendingUserType = async () => {
+      const pendingType = await getPendingUserType();
+
+      if (!pendingType) {
+        return;
+      }
+
+      const existingType = (user as { userType?: string } | null)?.userType ?? "";
+
+      try {
+        if (existingType !== pendingType) {
+          await updateProfile({ userType: pendingType, onboardingCompleted: false });
+        }
+      } catch (error) {
+        console.error("Failed to persist pending user type", error);
+      } finally {
+        await clearPendingUserType();
+      }
+    };
+
+    void syncPendingUserType();
+  }, [isAuthenticated, updateProfile, user]);
 
   return <>{children}</>;
 }
