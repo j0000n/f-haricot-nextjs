@@ -4,6 +4,14 @@ import {
   type ThemeName,
 } from "./index";
 import {
+  toLegacyRadii,
+  toLegacySpacing,
+  toLegacyTypography,
+  toSemanticRadii,
+  toSemanticSpacing,
+  toSemanticTypography,
+} from "@haricot/convex-client";
+import {
   generateComponentTokensFromGlobal,
   type TabBarTokens,
   type ThemeDefinition,
@@ -21,14 +29,12 @@ export type CustomThemeRecord = {
   radii?: Partial<ThemeTokens["radii"]>;
   typography?: Partial<ThemeTokens["typography"]>;
   fontFamilies?: Partial<ThemeTokens["fontFamilies"]>;
-  logoAsset?: string | null;
   tabBar?: TabBarTokens | null;
 };
 
 export type ThemeBuilderDraft = {
   name: string;
   isPublic: boolean;
-  logoAsset: string;
   tokens: ThemeTokens;
 };
 
@@ -50,13 +56,14 @@ export type CreateCustomThemePayload = {
     logoFill: string;
   };
   spacing: {
-    xxs: number;
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
+    spacingMicro: number;
+    spacingTight: number;
+    spacingCompact: number;
+    spacingStandard: number;
+    spacingComfortable: number;
+    spacingRoomy: number;
+    spacingSpacious: number;
+    spacingHero: number;
   };
   padding: {
     screen: number;
@@ -65,17 +72,20 @@ export type CreateCustomThemePayload = {
     compact: number;
   };
   radii: {
-    sm: number;
-    md: number;
-    lg: number;
+    radiusControl: number;
+    radiusCard: number;
+    radiusSurface: number;
+    radiusPill: number;
   };
   typography: {
-    title: number;
-    heading: number;
-    subheading: number;
-    body: number;
-    small: number;
-    tiny: number;
+    typeDisplay: number;
+    typeTitle: number;
+    typeHeading: number;
+    typeSubheading: number;
+    typeBody: number;
+    typeBodySmall: number;
+    typeCaption: number;
+    typeMicro: number;
   };
   fontFamilies: {
     display: string;
@@ -86,7 +96,6 @@ export type CreateCustomThemePayload = {
     semiBold: string;
     bold: string;
   };
-  logoAsset: string;
   isPublic: boolean;
   tabBar?: {
     containerBackground: string;
@@ -245,8 +254,10 @@ export function normalizeCustomThemeToTokens(
   };
 
   const spacing: ThemeTokens["spacing"] = {
-    ...fallbackTokens.spacing,
-    ...(customThemeRecord.spacing ?? {}),
+    ...toLegacySpacing(fallbackTokens.spacing),
+    ...toSemanticSpacing(fallbackTokens.spacing),
+    ...toLegacySpacing(customThemeRecord.spacing),
+    ...toSemanticSpacing(customThemeRecord.spacing),
     none: 0,
   };
   const padding: ThemeTokens["padding"] = {
@@ -254,12 +265,16 @@ export function normalizeCustomThemeToTokens(
     ...(customThemeRecord.padding ?? {}),
   };
   const radii: ThemeTokens["radii"] = {
-    ...fallbackTokens.radii,
-    ...(customThemeRecord.radii ?? {}),
+    ...toLegacyRadii(fallbackTokens.radii),
+    ...toSemanticRadii(fallbackTokens.radii),
+    ...toLegacyRadii(customThemeRecord.radii),
+    ...toSemanticRadii(customThemeRecord.radii),
   };
   const typography: ThemeTokens["typography"] = {
-    ...fallbackTokens.typography,
-    ...(customThemeRecord.typography ?? {}),
+    ...toLegacyTypography(fallbackTokens.typography),
+    ...toSemanticTypography(fallbackTokens.typography),
+    ...toLegacyTypography(customThemeRecord.typography),
+    ...toSemanticTypography(customThemeRecord.typography),
   };
   const fontFamilies: ThemeTokens["fontFamilies"] = {
     ...fallbackTokens.fontFamilies,
@@ -301,7 +316,7 @@ export function buildThemeDefinitionFromCustomTheme(
     description: `Custom theme: ${customThemeRecord.name}`,
     tokens: normalizeCustomThemeToTokens(customThemeRecord, fallbackThemeName),
     assets: {
-      logo: customThemeRecord.logoAsset ?? fallbackDefinition.assets.logo,
+      logo: fallbackDefinition.assets.logo,
     },
   };
 }
@@ -331,13 +346,14 @@ export function buildCreateCustomThemePayload(
       logoFill: tokens.colors.logoFill ?? tokens.colors.textPrimary,
     },
     spacing: {
-      xxs: tokens.spacing.xxs,
-      xs: tokens.spacing.xs,
-      sm: tokens.spacing.sm,
-      md: tokens.spacing.md,
-      lg: tokens.spacing.lg,
-      xl: tokens.spacing.xl,
-      xxl: tokens.spacing.xxl,
+      spacingMicro: tokens.spacing.spacingMicro,
+      spacingTight: tokens.spacing.spacingTight,
+      spacingCompact: tokens.spacing.spacingCompact,
+      spacingStandard: tokens.spacing.spacingStandard,
+      spacingComfortable: tokens.spacing.spacingComfortable,
+      spacingRoomy: tokens.spacing.spacingRoomy,
+      spacingSpacious: tokens.spacing.spacingSpacious,
+      spacingHero: tokens.spacing.spacingHero,
     },
     padding: {
       screen: tokens.padding.screen,
@@ -346,17 +362,20 @@ export function buildCreateCustomThemePayload(
       compact: tokens.padding.compact,
     },
     radii: {
-      sm: tokens.radii.sm,
-      md: tokens.radii.md,
-      lg: tokens.radii.lg,
+      radiusControl: tokens.radii.radiusControl,
+      radiusCard: tokens.radii.radiusCard,
+      radiusSurface: tokens.radii.radiusSurface,
+      radiusPill: tokens.radii.radiusPill,
     },
     typography: {
-      title: tokens.typography.title,
-      heading: tokens.typography.heading,
-      subheading: tokens.typography.subheading,
-      body: tokens.typography.body,
-      small: tokens.typography.small,
-      tiny: tokens.typography.tiny,
+      typeDisplay: tokens.typography.typeDisplay,
+      typeTitle: tokens.typography.typeTitle,
+      typeHeading: tokens.typography.typeHeading,
+      typeSubheading: tokens.typography.typeSubheading,
+      typeBody: tokens.typography.typeBody,
+      typeBodySmall: tokens.typography.typeBodySmall,
+      typeCaption: tokens.typography.typeCaption,
+      typeMicro: tokens.typography.typeMicro,
     },
     fontFamilies: {
       display: tokens.fontFamilies.display,
@@ -367,7 +386,6 @@ export function buildCreateCustomThemePayload(
       semiBold: tokens.fontFamilies.semiBold,
       bold: tokens.fontFamilies.bold,
     },
-    logoAsset: draft.logoAsset || "/assets/images/logo.svg",
     isPublic: draft.isPublic,
     tabBar: toPayloadTabBar(tabBar),
   };

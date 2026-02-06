@@ -11,6 +11,7 @@ export type GalleryThemeSource = "mine" | "builtIn" | "public";
 export type GalleryThemeItem = {
   id: string;
   source: GalleryThemeSource;
+  docId?: string;
   label: string;
   description: string;
   tokens: ThemeTokens;
@@ -23,6 +24,8 @@ type ThemeGalleryCarouselProps = {
   items: GalleryThemeItem[];
   initialIndex?: number;
   onApplyTheme: (item: GalleryThemeItem) => Promise<void>;
+  onHideTheme?: (item: GalleryThemeItem) => Promise<void>;
+  onReportTheme?: (item: GalleryThemeItem) => Promise<void>;
 };
 
 const clampIndex = (value: number, length: number) =>
@@ -42,11 +45,14 @@ export function ThemeGalleryCarousel({
   items,
   initialIndex = 0,
   onApplyTheme,
+  onHideTheme,
+  onReportTheme,
 }: ThemeGalleryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(() =>
     clampIndex(initialIndex, items.length)
   );
   const [isApplying, setIsApplying] = useState(false);
+  const [isModerating, setIsModerating] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
@@ -87,6 +93,30 @@ export function ThemeGalleryCarousel({
       await onApplyTheme(currentItem);
     } finally {
       setIsApplying(false);
+    }
+  };
+
+  const handleHide = async () => {
+    if (!currentItem || !onHideTheme) {
+      return;
+    }
+    try {
+      setIsModerating(true);
+      await onHideTheme(currentItem);
+    } finally {
+      setIsModerating(false);
+    }
+  };
+
+  const handleReport = async () => {
+    if (!currentItem || !onReportTheme) {
+      return;
+    }
+    try {
+      setIsModerating(true);
+      await onReportTheme(currentItem);
+    } finally {
+      setIsModerating(false);
     }
   };
 
@@ -210,18 +240,50 @@ export function ThemeGalleryCarousel({
         <div className={styles.galleryIndex}>
           {currentIndex + 1} / {items.length}
         </div>
-        <button
-          type="button"
-          onClick={handleApply}
-          disabled={isApplying}
-          className={`${styles.galleryButton} ${styles.galleryApply}`}
-          style={{
-            backgroundColor: chromeTokens.colors.accent,
-            color: chromeTokens.colors.accentOnPrimary,
-          }}
-        >
-          {isApplying ? "Applying..." : "Apply this theme"}
-        </button>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {currentItem.source === "public" ? (
+            <>
+              <button
+                type="button"
+                onClick={handleHide}
+                disabled={isModerating}
+                className={styles.galleryButton}
+                style={{
+                  borderColor: chromeTokens.colors.border,
+                  color: chromeTokens.colors.textPrimary,
+                  backgroundColor: chromeTokens.colors.surface,
+                }}
+              >
+                Hide
+              </button>
+              <button
+                type="button"
+                onClick={handleReport}
+                disabled={isModerating}
+                className={styles.galleryButton}
+                style={{
+                  borderColor: chromeTokens.colors.border,
+                  color: chromeTokens.colors.textPrimary,
+                  backgroundColor: chromeTokens.colors.surfaceMuted,
+                }}
+              >
+                Report
+              </button>
+            </>
+          ) : null}
+          <button
+            type="button"
+            onClick={handleApply}
+            disabled={isApplying}
+            className={`${styles.galleryButton} ${styles.galleryApply}`}
+            style={{
+              backgroundColor: chromeTokens.colors.accent,
+              color: chromeTokens.colors.accentOnPrimary,
+            }}
+          >
+            {isApplying ? "Applying..." : "Apply this theme"}
+          </button>
+        </div>
       </div>
     </section>
   );

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
-import { api } from "@haricot/convex-client";
+import { api, type Id } from "@haricot/convex-client";
 import { useTranslation } from "@/i18n/useTranslation";
 import { ThemeProvider, useTheme, useTokens } from "@/styles/themeContext";
 import { ThemeStyles } from "@/components/ThemeStyles";
@@ -55,6 +55,7 @@ type StatusMessage = {
 };
 
 type CustomThemeDoc = {
+  _id?: Id<"customThemes">;
   _creationTime?: number;
   name: string;
   shareCode: string;
@@ -64,8 +65,8 @@ type CustomThemeDoc = {
   radii?: Partial<ThemeTokens["radii"]>;
   typography?: Partial<ThemeTokens["typography"]>;
   fontFamilies?: Partial<ThemeTokens["fontFamilies"]>;
-  logoAsset?: string | null;
   tabBar?: ThemeTokens["components"]["tabBar"] | null;
+  hiddenBy?: Array<Id<"users">>;
 };
 
 function normalizeHighContrastMode(
@@ -87,7 +88,6 @@ function toCustomThemeRecord(theme: CustomThemeDoc): CustomThemeRecord {
     radii: theme.radii,
     typography: theme.typography,
     fontFamilies: theme.fontFamilies,
-    logoAsset: theme.logoAsset,
     tabBar: theme.tabBar ?? undefined,
   };
 }
@@ -99,6 +99,8 @@ export default function ThemePage() {
   const user = useQuery(api.users.getCurrentUser);
   const updateProfile = useMutation(api.users.updateProfile);
   const createCustomTheme = useMutation(api.customThemes.createCustomTheme);
+  const hideTheme = useMutation(api.customThemes.hideTheme);
+  const reportTheme = useMutation(api.customThemes.reportTheme);
 
   const [mode, setMode] = useState<ThemeMode>("explore");
   const [themeState, setThemeState] = useState<ThemeState>({
@@ -110,10 +112,11 @@ export default function ThemePage() {
   const [shareCodeInput, setShareCodeInput] = useState("");
   const [pendingShareCode, setPendingShareCode] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
-  const [builderDraftTheme, setBuilderDraftTheme] =
-    useState<CustomThemeRecord | null>(null);
+  const [builderDraftTokens, setBuilderDraftTokens] = useState<ThemeTokens | null>(null);
+  const [builderStep, setBuilderStep] = useState(0);
   const [builderSession, setBuilderSession] = useState(0);
   const [galleryFocusId, setGalleryFocusId] = useState<string | null>(null);
+  const [undoThemeState, setUndoThemeState] = useState<ThemeState | null>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -267,6 +270,7 @@ export default function ThemePage() {
         return {
           id: `mine-${record.shareCode}`,
           source: "mine" as const,
+          docId: theme._id,
           label: record.name,
           description: `Share code: ${record.shareCode}`,
           tokens: normalizeCustomThemeToTokens(record),
@@ -295,6 +299,7 @@ export default function ThemePage() {
         return {
           id: `public-${record.shareCode}`,
           source: "public" as const,
+          docId: theme._id,
           label: record.name,
           description: `Community theme · ${record.shareCode}`,
           tokens: normalizeCustomThemeToTokens(record),
@@ -342,6 +347,8 @@ export default function ThemePage() {
   }, [activeThemeName, galleryFocusId, galleryItems, themeState.customShareCode]);
 
   const handleApplyGalleryTheme = async (item: GalleryThemeItem) => {
+    const previousThemeState = { ...themeState };
+
     if (item.themeName) {
       const requiresConfirm =
         themeState.highContrastMode !== "off" &&
@@ -356,6 +363,7 @@ export default function ThemePage() {
           }),
         });
       } else {
+        setUndoThemeState(previousThemeState);
         setStatusMessage({
           type: "success",
           text: t("themeGallery.applied", {
@@ -382,6 +390,7 @@ export default function ThemePage() {
       highContrastMode: "off",
     });
 
+    setUndoThemeState(previousThemeState);
     setStatusMessage({
       type: "success",
       text: t("themeGallery.applied", {
@@ -391,6 +400,7 @@ export default function ThemePage() {
   };
 
   const handleCreateAndApply = async (payload: CreateCustomThemePayload) => {
+    const previousThemeState = { ...themeState };
     const result = await createCustomTheme(payload);
 
     await updateProfile({
@@ -408,6 +418,7 @@ export default function ThemePage() {
     const galleryId = `mine-${result.shareCode}`;
     setGalleryFocusId(galleryId);
     setMode("gallery");
+    setUndoThemeState(previousThemeState);
     setStatusMessage({
       type: "success",
       text: t("themeBuilder.created", {
@@ -422,26 +433,69 @@ export default function ThemePage() {
     };
   };
 
-  const customThemeData =
-    mode === "build" && builderDraftTheme
-      ? builderDraftTheme
-      : resolvedCurrentCustomTheme;
+  const handleHidePublicTheme = async (item: GalleryThemeItem) => {
+    if (!item.id.startsWith("public-") || !item.docId) {
+      return;
+    }
 
-  const providerCustomShareCode =
-    mode === "build" && builderDraftTheme
-      ? builderDraftTheme.shareCode
-      : themeState.customShareCode;
+    await hideTheme({ themeId: item.docId });
+    setStatusMessage({
+      type: "info",
+      text: t("themeGallery.hidden", {
+        defaultValue: "Theme hidden from your gallery.",
+      }),
+    });
+  };
 
-  const providerHighContrast =
-    mode === "build" && builderDraftTheme
-      ? "off"
-      : themeState.highContrastMode;
+  const handleReportPublicTheme = async (item: GalleryThemeItem) => {
+    if (!item.id.startsWith("public-") || !item.docId) {
+      return;
+    }
+
+    await reportTheme({ themeId: item.docId, reason: "Gallery report" });
+    setStatusMessage({
+      type: "info",
+      text: t("themeGallery.reported", {
+        defaultValue: "Theme reported and hidden.",
+      }),
+    });
+  };
+
+  const handleUndoThemeApply = async () => {
+    if (!undoThemeState) {
+      return;
+    }
+
+    setThemeState(undoThemeState);
+    if (undoThemeState.customShareCode) {
+      await updateProfile({
+        customThemeShareCode: undoThemeState.customShareCode,
+        preferredTheme: null,
+        highContrastMode: undoThemeState.highContrastMode,
+      });
+    } else {
+      await updateProfile({
+        customThemeShareCode: null,
+        preferredTheme: undoThemeState.themeName,
+        highContrastMode: undoThemeState.highContrastMode,
+      });
+    }
+
+    setUndoThemeState(null);
+    setStatusMessage({
+      type: "info",
+      text: t("themeGallery.undoApplied", {
+        defaultValue: "Reverted to previous theme.",
+      }),
+    });
+  };
 
   const handleModeSwitch = (nextMode: ThemeMode) => {
     setMode(nextMode);
 
     if (nextMode === "build") {
-      setBuilderDraftTheme(null);
+      setBuilderDraftTokens(null);
+      setBuilderStep(0);
       setBuilderSession((prev) => prev + 1);
     }
 
@@ -465,9 +519,9 @@ export default function ThemePage() {
   return (
     <ThemeProvider
       initialThemeName={themeState.themeName}
-      initialCustomThemeShareCode={providerCustomShareCode}
-      customThemeData={customThemeData}
-      initialAccessibilityPreferences={{ highContrastMode: providerHighContrast }}
+      initialCustomThemeShareCode={themeState.customShareCode}
+      customThemeData={resolvedCurrentCustomTheme}
+      initialAccessibilityPreferences={{ highContrastMode: themeState.highContrastMode }}
     >
       <ThemeStyles />
       <ThemePageContent
@@ -483,24 +537,20 @@ export default function ThemePage() {
         onShareCodeInput={setShareCodeInput}
         onApplyShareCode={handleApplyShareCode}
         customThemeData={resolvedCurrentCustomTheme}
-        onBuilderDraftChange={(tokens, label) => {
-          setBuilderDraftTheme({
-            name: label,
-            shareCode: "__DRAFT__",
-            colors: tokens.colors,
-            spacing: tokens.spacing,
-            padding: tokens.padding,
-            radii: tokens.radii,
-            typography: tokens.typography,
-            fontFamilies: tokens.fontFamilies,
-            tabBar: tokens.components.tabBar,
-            logoAsset: "/assets/images/logo.svg",
-          });
+        onBuilderDraftChange={(tokens) => {
+          setBuilderDraftTokens(tokens);
         }}
+        onBuilderStepChange={setBuilderStep}
         onCreateAndApply={handleCreateAndApply}
         galleryItems={galleryItems}
         galleryInitialIndex={galleryInitialIndex}
         onApplyGalleryTheme={handleApplyGalleryTheme}
+        onHideGalleryTheme={handleHidePublicTheme}
+        onReportGalleryTheme={handleReportPublicTheme}
+        onUndoThemeApply={handleUndoThemeApply}
+        canUndoThemeApply={undoThemeState !== null}
+        builderPreviewTokens={builderDraftTokens}
+        builderStep={builderStep}
         builderSession={builderSession}
       />
     </ThemeProvider>
@@ -521,10 +571,17 @@ function ThemePageContent({
   onApplyShareCode,
   customThemeData,
   onBuilderDraftChange,
+  onBuilderStepChange,
   onCreateAndApply,
   galleryItems,
   galleryInitialIndex,
   onApplyGalleryTheme,
+  onHideGalleryTheme,
+  onReportGalleryTheme,
+  onUndoThemeApply,
+  canUndoThemeApply,
+  builderPreviewTokens,
+  builderStep,
   builderSession,
 }: {
   mode: ThemeMode;
@@ -540,10 +597,17 @@ function ThemePageContent({
   onApplyShareCode: () => void;
   customThemeData: CustomThemeRecord | null;
   onBuilderDraftChange: (tokens: ThemeTokens, label: string) => void;
+  onBuilderStepChange: (step: number) => void;
   onCreateAndApply: (payload: CreateCustomThemePayload) => Promise<{ shareCode: string; name: string }>;
   galleryItems: GalleryThemeItem[];
   galleryInitialIndex: number;
   onApplyGalleryTheme: (item: GalleryThemeItem) => Promise<void>;
+  onHideGalleryTheme: (item: GalleryThemeItem) => Promise<void>;
+  onReportGalleryTheme: (item: GalleryThemeItem) => Promise<void>;
+  onUndoThemeApply: () => Promise<void>;
+  canUndoThemeApply: boolean;
+  builderPreviewTokens: ThemeTokens | null;
+  builderStep: number;
   builderSession: number;
 }) {
   const { t } = useTranslation();
@@ -726,7 +790,25 @@ function ThemePageContent({
                   border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
                 }}
               >
-                {statusMessage.text}
+                <div>{statusMessage.text}</div>
+                {canUndoThemeApply ? (
+                  <button
+                    type="button"
+                    onClick={() => void onUndoThemeApply()}
+                    style={{
+                      marginTop: 8,
+                      borderRadius: tokens.radii.radiusControl,
+                      border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
+                      backgroundColor: tokens.colors.surface,
+                      color: tokens.colors.textPrimary,
+                      padding: `${tokens.spacing.spacingTight}px ${tokens.spacing.spacingStandard}px`,
+                      fontFamily: tokens.fontFamilies.semiBold,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {t("common.undo", { defaultValue: "Undo" })}
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -834,6 +916,7 @@ function ThemePageContent({
                 key={`builder-${builderSession}`}
                 baseTokens={tokens}
                 onDraftTokensChange={onBuilderDraftChange}
+                onStepChange={onBuilderStepChange}
                 onCreateAndApply={onCreateAndApply}
               />
             ) : null}
@@ -861,9 +944,28 @@ function ThemePageContent({
               items={galleryItems}
               initialIndex={galleryInitialIndex}
               onApplyTheme={onApplyGalleryTheme}
+              onHideTheme={onHideGalleryTheme}
+              onReportTheme={onReportGalleryTheme}
             />
           ) : (
-            <ThemePreview tokens={tokens} />
+            <ThemePreview
+              tokens={mode === "build" && builderPreviewTokens ? builderPreviewTokens : tokens}
+              focus={
+                mode !== "build"
+                  ? null
+                  : builderStep === 0
+                  ? "identity"
+                  : builderStep === 1
+                  ? "palette"
+                  : builderStep === 2
+                  ? "typography"
+                  : builderStep === 3
+                  ? "spacing"
+                  : builderStep === 4
+                  ? "navigation"
+                  : null
+              }
+            />
           )}
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { useConvexAuth } from "convex/react";
 import { useQuery } from "convex/react";
-import { api } from "@haricot/convex-client";
+import { api, type Id } from "@haricot/convex-client";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -14,15 +14,13 @@ export default function ListDetailPage() {
   const params = useParams();
   const router = useRouter();
   
-  const listId = useMemo(() => {
+  const listId = useMemo<Id<"lists"> | undefined>(() => {
     const id = params.id;
-    return Array.isArray(id) ? id[0] : id;
+    const rawId = Array.isArray(id) ? id[0] : id;
+    return typeof rawId === "string" ? (rawId as Id<"lists">) : undefined;
   }, [params.id]);
 
-  const list = useQuery(
-    api.lists.getById,
-    listId ? { id: listId as any } : "skip"
-  );
+  const list = useQuery(api.lists.getById, listId ? { id: listId } : "skip");
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -69,9 +67,11 @@ export default function ListDetailPage() {
       </div>
 
       {(() => {
-        const recipeIds =
+        const recipeIds: Array<Id<"recipes">> =
           list.type === "cook-asap"
-            ? list.entries?.map((entry) => entry.recipeId) ?? []
+            ? (list.entries ?? []).map(
+                (entry: { recipeId: Id<"recipes"> }) => entry.recipeId
+              )
             : list.recipeIds ?? [];
 
         if (recipeIds.length === 0) {

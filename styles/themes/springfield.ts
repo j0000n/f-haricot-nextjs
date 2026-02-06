@@ -46,6 +46,10 @@ const radii = {
   md: 12,
   lg: 18,
   round: baseRadii.round,
+  radiusControl: 6,
+  radiusCard: 12,
+  radiusSurface: 18,
+  radiusPill: baseRadii.round,
 } as const;
 
 export const springfieldTheme: ThemeDefinition = {

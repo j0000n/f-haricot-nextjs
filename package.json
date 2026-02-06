@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm run build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

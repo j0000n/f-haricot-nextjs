@@ -3,8 +3,17 @@
 import { Logo } from "@/components/logo/Logo";
 import type { ThemeTokens } from "@/styles/themes";
 
+type ThemePreviewFocus =
+  | "identity"
+  | "palette"
+  | "typography"
+  | "spacing"
+  | "navigation"
+  | null;
+
 type ThemePreviewProps = {
   tokens: ThemeTokens;
+  focus?: ThemePreviewFocus;
 };
 
 const colorKeys: Array<keyof ThemeTokens["colors"]> = [
@@ -28,7 +37,18 @@ const colorKeys: Array<keyof ThemeTokens["colors"]> = [
   "info",
 ];
 
-export function ThemePreview({ tokens }: ThemePreviewProps) {
+function focusFrame(active: boolean, tokens: ThemeTokens): React.CSSProperties {
+  if (!active) {
+    return {};
+  }
+
+  return {
+    boxShadow: `0 0 0 3px ${tokens.colors.accent}33`,
+    borderColor: tokens.colors.accent,
+  };
+}
+
+export function ThemePreview({ tokens, focus = null }: ThemePreviewProps) {
   const primaryBackground =
     tokens.components.button.primary.colorCustom ?? tokens.colors.accent;
   const primaryText =
@@ -49,19 +69,20 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
         padding: tokens.padding.section,
         display: "flex",
         flexDirection: "column",
-        gap: tokens.spacing.lg,
+        gap: tokens.spacing.spacingRoomy,
       }}
     >
       <section
         style={{
           backgroundColor: tokens.colors.surface,
-          borderRadius: tokens.radii.lg,
+          borderRadius: tokens.radii.radiusSurface,
           border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
           padding: tokens.padding.card,
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          gap: tokens.spacing.md,
+          gap: tokens.spacing.spacingComfortable,
+          ...focusFrame(focus === "identity", tokens),
         }}
       >
         <Logo
@@ -74,7 +95,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
           <div
             style={{
               fontFamily: tokens.fontFamilies.display,
-              fontSize: tokens.typography.title,
+              fontSize: tokens.typography.typeTitle,
               lineHeight: tokens.lineHeights.tight,
             }}
           >
@@ -83,7 +104,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
           <div
             style={{
               fontFamily: tokens.fontFamilies.regular,
-              fontSize: tokens.typography.small,
+              fontSize: tokens.typography.typeCaption,
               color: tokens.colors.textSecondary,
             }}
           >
@@ -111,7 +132,8 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: tokens.spacing.md,
+          gap: tokens.spacing.spacingComfortable,
+          ...focusFrame(focus === "spacing", tokens),
         }}
       >
         {Array.from({ length: 3 }).map((_, index) => (
@@ -130,14 +152,14 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
             <div
               style={{
                 height: tokens.components.card.imageHeight,
-                borderRadius: tokens.radii.sm,
+                borderRadius: tokens.radii.radiusControl,
                 background: tokens.colors.imageBackgroundColor,
               }}
             />
             <div
               style={{
                 fontFamily: tokens.fontFamilies.semiBold,
-                fontSize: tokens.typography.body,
+                fontSize: tokens.typography.typeBody,
               }}
             >
               Card Title {index + 1}
@@ -145,7 +167,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
             <div
               style={{
                 fontFamily: tokens.fontFamilies.regular,
-                fontSize: tokens.typography.tiny,
+                fontSize: tokens.typography.typeMicro,
                 color: tokens.colors.textSecondary,
               }}
             >
@@ -155,7 +177,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
         ))}
       </section>
 
-      <section>
+      <section style={{ ...focusFrame(focus === "spacing", tokens) }}>
         <div
           style={{
             display: "flex",
@@ -168,7 +190,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
             style={{
               margin: 0,
               fontFamily: tokens.fontFamilies.semiBold,
-              fontSize: tokens.typography.subheading,
+              fontSize: tokens.typography.typeSubheading,
             }}
           >
             Preview Rail
@@ -176,7 +198,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
           <span
             style={{
               fontFamily: tokens.fontFamilies.regular,
-              fontSize: tokens.typography.tiny,
+              fontSize: tokens.typography.typeMicro,
               color: tokens.colors.textSecondary,
             }}
           >
@@ -197,25 +219,25 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
               style={{
                 minWidth: 180,
                 backgroundColor: tokens.colors.surfaceVariant,
-                borderRadius: tokens.radii.md,
-                padding: tokens.spacing.sm,
+                borderRadius: tokens.radii.radiusCard,
+                padding: tokens.spacing.spacingStandard,
                 border: `${tokens.borderWidths.hairline}px solid ${tokens.colors.border}`,
                 display: "flex",
                 flexDirection: "column",
-                gap: tokens.spacing.xs,
+                gap: tokens.spacing.spacingCompact,
               }}
             >
               <div
                 style={{
                   height: 72,
-                  borderRadius: tokens.radii.sm,
+                  borderRadius: tokens.radii.radiusControl,
                   background: tokens.colors.surfaceMuted,
                 }}
               />
               <div
                 style={{
                   fontFamily: tokens.fontFamilies.semiBold,
-                  fontSize: tokens.typography.small,
+                  fontSize: tokens.typography.typeCaption,
                 }}
               >
                 Rail Card {index + 1}
@@ -223,7 +245,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
               <div
                 style={{
                   fontFamily: tokens.fontFamilies.regular,
-                  fontSize: tokens.typography.tiny,
+                  fontSize: tokens.typography.typeMicro,
                   color: tokens.colors.textSecondary,
                 }}
               >
@@ -238,33 +260,60 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: tokens.spacing.lg,
+          gap: tokens.spacing.spacingRoomy,
         }}
       >
         <div
           style={{
             backgroundColor: tokens.colors.surface,
-            borderRadius: tokens.radii.md,
+            borderRadius: tokens.radii.radiusCard,
             border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
             padding: tokens.padding.card,
             display: "flex",
             flexDirection: "column",
-            gap: tokens.spacing.sm,
+            gap: tokens.spacing.spacingStandard,
+            ...focusFrame(focus === "typography", tokens),
           }}
         >
-          <div style={{ fontFamily: tokens.fontFamilies.display, fontSize: tokens.typography.display }}>
+          <div
+            style={{
+              fontFamily: tokens.fontFamilies.display,
+              fontSize: tokens.typography.typeDisplay,
+            }}
+          >
             Display
           </div>
-          <div style={{ fontFamily: tokens.fontFamilies.semiBold, fontSize: tokens.typography.title }}>
+          <div
+            style={{
+              fontFamily: tokens.fontFamilies.semiBold,
+              fontSize: tokens.typography.typeTitle,
+            }}
+          >
             Title Text
           </div>
-          <div style={{ fontFamily: tokens.fontFamilies.medium, fontSize: tokens.typography.heading }}>
+          <div
+            style={{
+              fontFamily: tokens.fontFamilies.medium,
+              fontSize: tokens.typography.typeHeading,
+            }}
+          >
             Heading Sample
           </div>
-          <div style={{ fontFamily: tokens.fontFamilies.regular, fontSize: tokens.typography.body }}>
+          <div
+            style={{
+              fontFamily: tokens.fontFamilies.regular,
+              fontSize: tokens.typography.typeBody,
+            }}
+          >
             Body copy example with relaxed line height.
           </div>
-          <div style={{ fontFamily: tokens.fontFamilies.regular, fontSize: tokens.typography.tiny, color: tokens.colors.textSecondary }}>
+          <div
+            style={{
+              fontFamily: tokens.fontFamilies.regular,
+              fontSize: tokens.typography.typeMicro,
+              color: tokens.colors.textSecondary,
+            }}
+          >
             Tiny helper text
           </div>
         </div>
@@ -272,18 +321,19 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
         <div
           style={{
             backgroundColor: tokens.colors.surface,
-            borderRadius: tokens.radii.md,
+            borderRadius: tokens.radii.radiusCard,
             border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
             padding: tokens.padding.card,
             display: "flex",
             flexDirection: "column",
-            gap: tokens.spacing.sm,
+            gap: tokens.spacing.spacingStandard,
+            ...focusFrame(focus === "typography", tokens),
           }}
         >
           <label
             style={{
               fontFamily: tokens.fontFamilies.semiBold,
-              fontSize: tokens.typography.small,
+              fontSize: tokens.typography.typeCaption,
             }}
           >
             Input label
@@ -309,12 +359,18 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
               border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
               backgroundColor: tokens.colors.surfaceSubdued,
               fontFamily: tokens.fontFamilies.regular,
-              fontSize: tokens.typography.body,
+              fontSize: tokens.typography.typeBody,
               color: tokens.colors.textPrimary,
               resize: "vertical",
             }}
           />
-          <div style={{ display: "flex", gap: tokens.spacing.xs, flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: tokens.spacing.spacingCompact,
+              flexWrap: "wrap",
+            }}
+          >
             <button
               type="button"
               style={{
@@ -339,7 +395,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
                 border: "none",
                 padding: `${tokens.components.button.pill.paddingVertical}px ${tokens.components.button.pill.paddingHorizontal}px`,
                 fontFamily: tokens.fontFamilies.semiBold,
-                fontSize: tokens.typography.tiny,
+                fontSize: tokens.typography.typeMicro,
                 cursor: "pointer",
               }}
             >
@@ -353,7 +409,7 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
                 border: "none",
                 padding: `${tokens.components.button.text.paddingVertical}px ${tokens.components.button.text.paddingHorizontal}px`,
                 fontFamily: tokens.fontFamilies.semiBold,
-                fontSize: tokens.typography.small,
+                fontSize: tokens.typography.typeCaption,
                 cursor: "pointer",
               }}
             >
@@ -366,35 +422,36 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
       <section
         style={{
           backgroundColor: tokens.colors.surface,
-          borderRadius: tokens.radii.md,
+          borderRadius: tokens.radii.radiusCard,
           border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
           padding: tokens.padding.card,
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-          gap: tokens.spacing.sm,
+          gap: tokens.spacing.spacingStandard,
+          ...focusFrame(focus === "palette", tokens),
         }}
       >
         {colorKeys.map((key) => (
           <div
             key={key}
             style={{
-              borderRadius: tokens.radii.sm,
+              borderRadius: tokens.radii.radiusControl,
               border: `${tokens.borderWidths.hairline}px solid ${tokens.colors.border}`,
               overflow: "hidden",
               backgroundColor: tokens.colors[key],
               minHeight: 72,
               display: "flex",
               alignItems: "flex-end",
-              padding: tokens.spacing.xxs,
+              padding: tokens.spacing.spacingTight,
             }}
           >
             <span
               style={{
                 fontFamily: tokens.fontFamilies.semiBold,
-                fontSize: tokens.typography.tiny,
+                fontSize: tokens.typography.typeMicro,
                 color: tokens.colors.textPrimary,
                 backgroundColor: tokens.colors.surface,
-                borderRadius: tokens.radii.sm,
+                borderRadius: tokens.radii.radiusControl,
                 padding: "2px 6px",
               }}
             >
@@ -402,6 +459,89 @@ export function ThemePreview({ tokens }: ThemePreviewProps) {
             </span>
           </div>
         ))}
+      </section>
+
+      <section
+        style={{
+          backgroundColor: tokens.colors.surface,
+          borderRadius: tokens.radii.radiusCard,
+          border: `${tokens.borderWidths.thin}px solid ${tokens.colors.border}`,
+          padding: tokens.padding.card,
+          ...focusFrame(focus === "navigation", tokens),
+        }}
+      >
+        <div
+          style={{
+            fontFamily: tokens.fontFamilies.semiBold,
+            fontSize: tokens.typography.typeCaption,
+            marginBottom: tokens.spacing.spacingCompact,
+          }}
+        >
+          Navigation preview
+        </div>
+        <div
+          style={{
+            backgroundColor: tokens.components.tabBar.list.backgroundColor,
+            border: `${tokens.components.tabBar.list.borderWidth}px solid ${tokens.components.tabBar.list.borderColor}`,
+            borderRadius: tokens.components.tabBar.list.borderRadius,
+            padding: `${tokens.components.tabBar.list.paddingVertical}px ${tokens.components.tabBar.list.paddingHorizontal}px`,
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: tokens.spacing.spacingCompact,
+          }}
+        >
+          {(["home", "kitchen", "lists"] as const).map((tabKey, index) => {
+            const isActive = index === 1;
+            const iconName = tokens.components.tabBar.icon?.names[tabKey] ?? tabKey;
+            return (
+              <div
+                key={tabKey}
+                style={{
+                  borderRadius: tokens.components.tabBar.trigger.borderRadius,
+                  minHeight: tokens.components.tabBar.trigger.minHeight,
+                  backgroundColor: isActive
+                    ? tokens.components.tabBar.trigger.activeBackgroundColor
+                    : tokens.components.tabBar.trigger.inactiveBackgroundColor,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                }}
+              >
+                {tokens.components.tabBar.icon?.show ? (
+                  <span
+                    style={{
+                      fontFamily: tokens.fontFamilies.medium,
+                      color: isActive
+                        ? tokens.components.tabBar.icon.activeColor
+                        : tokens.components.tabBar.icon.inactiveColor,
+                      fontSize: 10,
+                    }}
+                  >
+                    {iconName}
+                  </span>
+                ) : null}
+                {tokens.components.tabBar.label.show ? (
+                  <span
+                    style={{
+                      fontFamily: tokens.fontFamilies.semiBold,
+                      color: isActive
+                        ? tokens.components.tabBar.label.activeColor
+                        : tokens.components.tabBar.label.color,
+                      fontSize: tokens.typography.typeMicro,
+                      textTransform: tokens.components.tabBar.label.uppercase
+                        ? "uppercase"
+                        : "none",
+                    }}
+                  >
+                    {tabKey}
+                  </span>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
       </section>
     </div>
   );

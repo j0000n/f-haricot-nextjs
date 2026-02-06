@@ -1,3 +1,106 @@
+@font-face {
+  font-family: "Peignot";
+  src: url("/assets/fonts/theme-lab/Peignot.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  src: url("/assets/fonts/theme-lab/source-sans-pro.regular.ttf")
+    format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans Pro Light";
+  src: url("/assets/fonts/theme-lab/source-sans-pro.light.ttf")
+    format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans Pro Light Italic";
+  src: url("/assets/fonts/theme-lab/source-sans-pro.light-italic.ttf")
+    format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans Pro SemiBold";
+  src: url("/assets/fonts/theme-lab/source-sans-pro.semibold.ttf")
+    format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans Pro Bold";
+  src: url("/assets/fonts/theme-lab/source-sans-pro.bold.ttf")
+    format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "East Market NF";
+  src: url("/assets/fonts/theme-lab/EastMarketNF.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Metaloxcide";
+  src: url("/assets/fonts/theme-lab/Metaloxcide.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "W95FA";
+  src: url("/assets/fonts/theme-lab/W95FA.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sprat-Regular";
+  src: url("/assets/fonts/theme-lab/Sprat-Regular.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sprat-Bold";
+  src: url("/assets/fonts/theme-lab/Sprat-Bold.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gloock-Regular";
+  src: url("/assets/fonts/theme-lab/Gloock-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OpenDyslexic-Regular";
+  src: url("/assets/fonts/theme-lab/OpenDyslexic-Regular.otf")
+    format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Saira-Regular";
+  src: url("/assets/fonts/theme-lab/Saira-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FT88-Regular";
+  src: url("/assets/fonts/theme-lab/FT88-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CutiveMono-Regular";
+  src: url("/assets/fonts/theme-lab/CutiveMono-Regular.ttf")
+    format("truetype");
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
 }
@@ -65,7 +168,7 @@ body {
 
 /* Semantic element styles */
 header {
-  padding: 1rem;
+  padding: .25rem;
   background: white;
   border-bottom: 1px solid #e0e0e0;
 }

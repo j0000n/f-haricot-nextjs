@@ -57,6 +57,10 @@ export const classicTheme: ThemeDefinition = {
       md: 16,
       lg: 32,
       round: baseRadii.round,
+      radiusControl: 8,
+      radiusCard: 16,
+      radiusSurface: 32,
+      radiusPill: baseRadii.round,
     },
     typography: baseTypography,
     fontFamilies: {

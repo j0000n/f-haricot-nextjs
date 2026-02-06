@@ -49,6 +49,73 @@ export type TabBarTokens = {
   icon?: TabBarIconTokens;
 };
 
+type ThemeSpacingLegacy = {
+  none: 0;
+  xxxs: number;
+  xxs: number;
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+  xxl: number;
+};
+
+type ThemeSpacingSemantic = {
+  spacingMicro: number;
+  spacingTight: number;
+  spacingCompact: number;
+  spacingStandard: number;
+  spacingComfortable: number;
+  spacingRoomy: number;
+  spacingSpacious: number;
+  spacingHero: number;
+};
+
+type ThemeRadiiLegacy = {
+  sm: number;
+  md: number;
+  lg: number;
+  round: number;
+};
+
+type ThemeRadiiSemantic = {
+  radiusControl: number;
+  radiusCard: number;
+  radiusSurface: number;
+  radiusPill: number;
+};
+
+type ThemeTypographyLegacy = {
+  display: number;
+  title: number;
+  heading: number;
+  subheading: number;
+  body: number;
+  extraSmall: number;
+  small: number;
+  tiny: number;
+};
+
+type ThemeTypographySemantic = {
+  typeDisplay: number;
+  typeTitle: number;
+  typeHeading: number;
+  typeSubheading: number;
+  typeBody: number;
+  typeBodySmall: number;
+  typeCaption: number;
+  typeMicro: number;
+};
+
+type ThemeSpacingInput = ThemeSpacingLegacy & Partial<ThemeSpacingSemantic>;
+type ThemeRadiiInput = ThemeRadiiLegacy & Partial<ThemeRadiiSemantic>;
+type ThemeTypographyInput = ThemeTypographyLegacy & Partial<ThemeTypographySemantic>;
+
+export type ThemeSpacingTokens = ThemeSpacingLegacy & ThemeSpacingSemantic;
+export type ThemeRadiiTokens = ThemeRadiiLegacy & ThemeRadiiSemantic;
+export type ThemeTypographyTokens = ThemeTypographyLegacy & ThemeTypographySemantic;
+
 export type ThemeTokens = {
   colors: {
     background: string;
@@ -75,39 +142,15 @@ export type ThemeTokens = {
     logoTertiaryColor: string;
     imageBackgroundColor: string;
   };
-  spacing: {
-    none: 0;
-    xxxs: number;
-    xxs: number;
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
-  };
+  spacing: ThemeSpacingTokens;
   padding: {
     screen: number;
     section: number;
     card: number;
     compact: number;
   };
-  radii: {
-    sm: number;
-    md: number;
-    lg: number;
-    round: number;
-  };
-  typography: {
-    display: number;
-    title: number;
-    heading: number;
-    subheading: number;
-    body: number;
-    extraSmall: number;
-    small: number;
-    tiny: number;
-  };
+  radii: ThemeRadiiTokens;
+  typography: ThemeTypographyTokens;
   fontFamilies: {
     display: string;
     regular: string;
@@ -240,11 +283,21 @@ export type ThemeAssets = {
   logo: string; // For web, this will be a path/URL instead of ImageSourcePropType
 };
 
+export type ThemeTokensInput = Omit<ThemeTokens, "spacing" | "radii" | "typography"> & {
+  spacing: ThemeSpacingInput;
+  radii: ThemeRadiiInput;
+  typography: ThemeTypographyInput;
+};
+
 export type ThemeDefinition = {
   label: string;
   description: string;
   tokens: ThemeTokens;
   assets: ThemeAssets;
+};
+
+export type ThemeDefinitionInput = Omit<ThemeDefinition, "tokens"> & {
+  tokens: ThemeTokensInput;
 };
 
 export const baseTypography = {
@@ -256,6 +309,14 @@ export const baseTypography = {
   extraSmall: 14,
   small: 14,
   tiny: 12,
+  typeDisplay: 40,
+  typeTitle: 32,
+  typeHeading: 24,
+  typeSubheading: 18,
+  typeBody: 16,
+  typeBodySmall: 14,
+  typeCaption: 14,
+  typeMicro: 12,
 } as const;
 
 export const baseFontFamilies = {
@@ -286,6 +347,14 @@ export const baseSpacing = {
   lg: 20,
   xl: 24,
   xxl: 40,
+  spacingMicro: 2,
+  spacingTight: 4,
+  spacingCompact: 8,
+  spacingStandard: 12,
+  spacingComfortable: 16,
+  spacingRoomy: 20,
+  spacingSpacious: 24,
+  spacingHero: 40,
 } as const;
 
 export const basePadding = {
@@ -300,6 +369,10 @@ export const baseRadii = {
   md: 12,
   lg: 28,
   round: 999,
+  radiusControl: 8,
+  radiusCard: 12,
+  radiusSurface: 28,
+  radiusPill: 999,
 } as const;
 
 export const baseIconSizes = {
@@ -488,6 +561,52 @@ export function generateComponentTokensFromGlobal(
   };
 }
 
-export function defineThemes<T extends Record<string, ThemeDefinition>>(themes: T) {
-  return themes;
+export function defineThemes<T extends Record<string, ThemeDefinitionInput>>(
+  themes: T
+): { [K in keyof T]: ThemeDefinition } {
+  const entries = Object.entries(themes).map(([key, definition]) => {
+    const spacing = definition.tokens.spacing;
+    const radii = definition.tokens.radii;
+    const typography = definition.tokens.typography;
+
+    const normalizedDefinition: ThemeDefinition = {
+      ...definition,
+      tokens: {
+        ...definition.tokens,
+        spacing: {
+          ...spacing,
+          spacingMicro: spacing.spacingMicro ?? spacing.xxxs,
+          spacingTight: spacing.spacingTight ?? spacing.xxs,
+          spacingCompact: spacing.spacingCompact ?? spacing.xs,
+          spacingStandard: spacing.spacingStandard ?? spacing.sm,
+          spacingComfortable: spacing.spacingComfortable ?? spacing.md,
+          spacingRoomy: spacing.spacingRoomy ?? spacing.lg,
+          spacingSpacious: spacing.spacingSpacious ?? spacing.xl,
+          spacingHero: spacing.spacingHero ?? spacing.xxl,
+        },
+        radii: {
+          ...radii,
+          radiusControl: radii.radiusControl ?? radii.sm,
+          radiusCard: radii.radiusCard ?? radii.md,
+          radiusSurface: radii.radiusSurface ?? radii.lg,
+          radiusPill: radii.radiusPill ?? radii.round,
+        },
+        typography: {
+          ...typography,
+          typeDisplay: typography.typeDisplay ?? typography.display,
+          typeTitle: typography.typeTitle ?? typography.title,
+          typeHeading: typography.typeHeading ?? typography.heading,
+          typeSubheading: typography.typeSubheading ?? typography.subheading,
+          typeBody: typography.typeBody ?? typography.body,
+          typeBodySmall: typography.typeBodySmall ?? typography.extraSmall,
+          typeCaption: typography.typeCaption ?? typography.small,
+          typeMicro: typography.typeMicro ?? typography.tiny,
+        },
+      },
+    };
+
+    return [key, normalizedDefinition] as const;
+  });
+
+  return Object.fromEntries(entries) as { [K in keyof T]: ThemeDefinition };
 }

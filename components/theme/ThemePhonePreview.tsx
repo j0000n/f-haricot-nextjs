@@ -29,7 +29,16 @@ export function ThemePhonePreview({
     tokens.colors.accentOnPrimary;
 
   return (
-    <div className={styles.phoneShell}>
+    <div
+      className={styles.phoneShell}
+      style={{
+        background: `
+          radial-gradient(120% 80% at 100% 0%, ${tokens.colors.accent}22 0%, transparent 60%),
+          radial-gradient(120% 80% at 0% 100%, ${tokens.colors.info}18 0%, transparent 65%),
+          linear-gradient(160deg, ${tokens.colors.surfaceVariant}66, ${tokens.colors.overlay}99)
+        `,
+      }}
+    >
       {showChrome ? (
         <div className={styles.phoneNotch}>
           <span />
@@ -49,11 +58,17 @@ export function ThemePhonePreview({
             backgroundColor: tokens.colors.surface,
             borderColor: tokens.colors.border,
             borderRadius: tokens.radii.md,
-            gap: tokens.spacing.xs,
-            padding: tokens.spacing.sm,
+            gap: tokens.spacing.spacingCompact,
+            padding: tokens.spacing.spacingStandard,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: tokens.spacing.xs }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: tokens.spacing.spacingCompact,
+            }}
+          >
             <Logo
               size={44}
               color1={tokens.colors.logoPrimaryColor}
@@ -64,7 +79,7 @@ export function ThemePhonePreview({
               <div
                 style={{
                   fontFamily: tokens.fontFamilies.display,
-                  fontSize: tokens.typography.body,
+                  fontSize: tokens.typography.typeBody,
                 }}
               >
                 {label}
@@ -72,7 +87,7 @@ export function ThemePhonePreview({
               <div
                 style={{
                   fontFamily: tokens.fontFamilies.regular,
-                  fontSize: tokens.typography.tiny,
+                  fontSize: tokens.typography.typeMicro,
                   color: tokens.colors.textSecondary,
                 }}
               >
@@ -80,7 +95,7 @@ export function ThemePhonePreview({
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: tokens.spacing.xs }}>
+          <div style={{ display: "flex", gap: tokens.spacing.spacingCompact }}>
             <button
               type="button"
               style={{
@@ -88,9 +103,9 @@ export function ThemePhonePreview({
                 color: primaryText,
                 borderRadius: tokens.components.button.primary.borderRadius,
                 border: "none",
-                padding: `${tokens.spacing.xxs}px ${tokens.spacing.sm}px`,
+                padding: `${tokens.spacing.spacingTight}px ${tokens.spacing.spacingStandard}px`,
                 fontFamily: tokens.fontFamilies.semiBold,
-                fontSize: tokens.typography.tiny,
+                fontSize: tokens.typography.typeMicro,
               }}
             >
               Primary
@@ -102,9 +117,9 @@ export function ThemePhonePreview({
                 color: pillText,
                 borderRadius: tokens.components.button.pill.borderRadius,
                 border: "none",
-                padding: `${tokens.spacing.xxs}px ${tokens.spacing.sm}px`,
+                padding: `${tokens.spacing.spacingTight}px ${tokens.spacing.spacingStandard}px`,
                 fontFamily: tokens.fontFamilies.semiBold,
-                fontSize: tokens.typography.tiny,
+                fontSize: tokens.typography.typeMicro,
               }}
             >
               Pill
@@ -112,11 +127,17 @@ export function ThemePhonePreview({
           </div>
         </section>
 
-        <section style={{ display: "flex", flexDirection: "column", gap: tokens.spacing.xs }}>
+        <section
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: tokens.spacing.spacingCompact,
+          }}
+        >
           <div
             style={{
               fontFamily: tokens.fontFamilies.semiBold,
-              fontSize: tokens.typography.small,
+              fontSize: tokens.typography.typeCaption,
               color: tokens.colors.textSecondary,
             }}
           >
@@ -128,7 +149,7 @@ export function ThemePhonePreview({
                 key={`phone-rail-${index}`}
                 className={styles.phoneRailCard}
                 style={{
-                  borderRadius: tokens.radii.sm,
+                  borderRadius: tokens.radii.radiusControl,
                   borderColor: tokens.colors.border,
                   backgroundColor: tokens.colors.surfaceVariant,
                 }}
@@ -136,14 +157,14 @@ export function ThemePhonePreview({
                 <div
                   style={{
                     height: 56,
-                    borderRadius: tokens.radii.sm,
+                    borderRadius: tokens.radii.radiusControl,
                     backgroundColor: tokens.colors.imageBackgroundColor,
                   }}
                 />
                 <div
                   style={{
                     fontFamily: tokens.fontFamilies.semiBold,
-                    fontSize: tokens.typography.tiny,
+                    fontSize: tokens.typography.typeMicro,
                     color: tokens.colors.textPrimary,
                   }}
                 >
@@ -154,7 +175,10 @@ export function ThemePhonePreview({
           </div>
         </section>
 
-        <section className={styles.phoneCards} style={{ gap: tokens.spacing.xs }}>
+        <section
+          className={styles.phoneCards}
+          style={{ gap: tokens.spacing.spacingCompact }}
+        >
           {Array.from({ length: 2 }).map((_, index) => (
             <article
               key={`phone-card-${index}`}
@@ -171,14 +195,14 @@ export function ThemePhonePreview({
               <div
                 style={{
                   height: 72,
-                  borderRadius: tokens.radii.sm,
+                  borderRadius: tokens.radii.radiusControl,
                   backgroundColor: tokens.colors.surfaceSubdued,
                 }}
               />
               <div
                 style={{
                   fontFamily: tokens.fontFamilies.semiBold,
-                  fontSize: tokens.typography.small,
+                  fontSize: tokens.typography.typeCaption,
                 }}
               >
                 Card {index + 1}
@@ -186,7 +210,7 @@ export function ThemePhonePreview({
               <div
                 style={{
                   fontFamily: tokens.fontFamilies.regular,
-                  fontSize: tokens.typography.tiny,
+                  fontSize: tokens.typography.typeMicro,
                   color: tokens.colors.textSecondary,
                 }}
               >
@@ -215,6 +239,77 @@ export function ThemePhonePreview({
             />
           ))}
         </section>
+
+        <nav
+          style={{
+            marginTop: "auto",
+            backgroundColor: tokens.components.tabBar.list.backgroundColor,
+            border: `${tokens.components.tabBar.list.borderWidth}px solid ${tokens.components.tabBar.list.borderColor}`,
+            borderRadius: tokens.components.tabBar.list.borderRadius,
+            padding: `${tokens.components.tabBar.list.paddingVertical}px ${tokens.components.tabBar.list.paddingHorizontal}px`,
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: tokens.spacing.spacingCompact,
+          }}
+        >
+          {(["home", "kitchen", "lists"] as const).map((tabKey, index) => {
+            const isActive = index === 1;
+            const iconName = tokens.components.tabBar.icon?.names?.[tabKey] ?? tabKey;
+
+            return (
+              <div
+                key={tabKey}
+                style={{
+                  borderRadius: tokens.components.tabBar.trigger.borderRadius,
+                  minHeight: tokens.components.tabBar.trigger.minHeight,
+                  backgroundColor: isActive
+                    ? tokens.components.tabBar.trigger.activeBackgroundColor
+                    : tokens.components.tabBar.trigger.inactiveBackgroundColor,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  border:
+                    tokens.components.tabBar.trigger.shape === "square"
+                      ? `1px solid ${tokens.colors.border}`
+                      : "none",
+                }}
+              >
+                {tokens.components.tabBar.icon?.show ? (
+                  <span
+                    style={{
+                      fontSize: 10,
+                      color: isActive
+                        ? tokens.components.tabBar.icon.activeColor
+                        : tokens.components.tabBar.icon.inactiveColor,
+                      fontFamily: tokens.fontFamilies.medium,
+                    }}
+                  >
+                    {iconName}
+                  </span>
+                ) : null}
+                {tokens.components.tabBar.label.show ? (
+                  <span
+                    style={{
+                      fontSize: tokens.typography.typeMicro,
+                      fontFamily: tokens.fontFamilies.semiBold,
+                      color: isActive
+                        ? tokens.components.tabBar.label.activeColor
+                        : tokens.components.tabBar.label.color,
+                      textTransform: tokens.components.tabBar.label.uppercase
+                        ? "uppercase"
+                        : "none",
+                      letterSpacing: tokens.components.tabBar.label.letterSpacing,
+                    }}
+                  >
+                    {tabKey}
+                  </span>
+                ) : null}
+              </div>
+            );
+          })}
+        </nav>
       </div>
     </div>
   );

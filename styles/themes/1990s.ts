@@ -58,6 +58,10 @@ export const ninetiesTheme: ThemeDefinition = {
       md: 8,
       lg: 12,
       round: baseRadii.round,
+      radiusControl: 4,
+      radiusCard: 8,
+      radiusSurface: 12,
+      radiusPill: baseRadii.round,
     },
     typography: baseTypography,
     fontFamilies: {

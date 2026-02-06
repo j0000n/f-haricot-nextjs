@@ -2,16 +2,29 @@
 
 import { useConvexAuth } from "convex/react";
 import { useQuery } from "convex/react";
-import { api } from "@haricot/convex-client";
+import { api, type Id } from "@haricot/convex-client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
 import Link from "next/link";
 
+type ListEntry = {
+  recipeId: Id<"recipes">;
+};
+
+type ListSummary = {
+  _id: Id<"lists">;
+  name: string;
+  emoji?: string | null;
+  type: "cook-asap" | "custom";
+  entries?: ListEntry[];
+  recipeIds?: Array<Id<"recipes">>;
+};
+
 export default function ListsPage() {
   const { t } = useTranslation();
   const { isAuthenticated, isLoading } = useConvexAuth();
-  const lists = useQuery(api.lists.getAll);
+  const listsQuery = useQuery(api.lists.getAll);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +33,7 @@ export default function ListsPage() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  if (isLoading || lists === undefined) {
+  if (isLoading || listsQuery === undefined) {
     return (
       <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
         <p>{t("common.loading")}</p>
@@ -31,6 +44,8 @@ export default function ListsPage() {
   if (!isAuthenticated) {
     return null;
   }
+
+  const lists = listsQuery as ListSummary[];
 
   // Debug: log lists to console
   if (typeof window !== "undefined") {

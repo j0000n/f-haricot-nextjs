@@ -58,6 +58,10 @@ export const fifitiesTheme: ThemeDefinition = {
       md: 6,
       lg: 8,
       round: baseRadii.round,
+      radiusControl: 4,
+      radiusCard: 6,
+      radiusSurface: 8,
+      radiusPill: baseRadii.round,
     },
     typography: baseTypography,
     fontFamilies: {

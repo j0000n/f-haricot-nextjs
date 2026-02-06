@@ -18,11 +18,11 @@ export function Header() {
   return (
     <header>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>
+        
           <a href="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <Logo size={75} color1="#478EC8" color2="#478EC8" color3="#1D154FF4" />
+            <Logo size={50} color1="#478EC8" color2="#478EC8" color3="#1D154FF4" />
           </a>
-        </h1>
+        
         <nav>
           {isLoading ? (
             <span>{t("common.loading")}</span>
