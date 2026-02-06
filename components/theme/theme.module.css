@@ -1,0 +1,605 @@
+.themePage {
+  display: grid;
+  grid-template-columns: minmax(300px, 390px) 1fr;
+  gap: 32px;
+  padding: 32px;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.sidebar {
+  width: 100%;
+}
+
+.sidebarInner {
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding-right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.modeSwitch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.modeButton {
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.modeButton:hover {
+  transform: translateY(-1px);
+}
+
+.modeButtonActive {
+  transform: translateY(-1px);
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shareCodeRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.shareInput {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid;
+  font-size: 14px;
+}
+
+.shareButton {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.notice {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.preview {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.builderRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.builderHeader h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.builderHeader p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.86;
+}
+
+.builderSteps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.builderStep {
+  border: 1px solid;
+  background: transparent;
+  border-radius: 10px;
+  text-align: left;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.builderStep span {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border: 1px solid;
+}
+
+.builderStepActive {
+  border-width: 2px;
+}
+
+.builderPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.builderField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.builderField input,
+.builderField select {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font-size: 14px;
+  background: transparent;
+  color: inherit;
+}
+
+.builderPaletteHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+}
+
+.builderPaletteHeader label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.builderPaletteHeader select {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+.builderColorControl {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.builderColorControl label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.builderColorControl > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.builderColorControl input[type="color"] {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+}
+
+.builderColorControl input:last-child {
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 7px 8px;
+  font-size: 12px;
+  width: 100%;
+  background: transparent;
+  color: inherit;
+}
+
+.builderSuggestions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.builderSuggestion {
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 10px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.builderSuggestion strong {
+  font-size: 12px;
+}
+
+.builderSuggestion span {
+  font-size: 11px;
+  opacity: 0.82;
+}
+
+.builderSuggestionColors {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.builderSuggestionColors i {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.builderColorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.builderFontPresets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.builderRangeGroup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.builderRangeControl {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.builderRangeControl > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.builderRangeControl input[type="range"] {
+  width: 100%;
+}
+
+.builderCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.builderToggleAdvanced {
+  border: 1px dashed;
+  border-radius: 10px;
+  background: transparent;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.builderAdvanced {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.builderFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.builderNav {
+  border-radius: 10px;
+  border: 1px solid;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.builderNav:disabled {
+  opacity: 0.56;
+  cursor: not-allowed;
+}
+
+.builderPrimary {
+  border: none;
+}
+
+.galleryRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.galleryViewport {
+  display: flex;
+  justify-content: center;
+}
+
+.galleryMeta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.galleryTitle {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.galleryDescription {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.82;
+}
+
+.galleryBadge {
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.galleryControls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.galleryButton {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.galleryButton:disabled {
+  opacity: 0.46;
+  cursor: not-allowed;
+}
+
+.galleryDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.galleryDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.galleryDotActive {
+  width: 20px;
+  opacity: 1;
+}
+
+.galleryFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.galleryIndex {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.galleryApply {
+  border: none;
+}
+
+.phoneShell {
+  width: min(100%, 360px);
+  aspect-ratio: 9 / 19.5;
+  border-radius: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 60%),
+    radial-gradient(120% 80% at 0% 100%, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0) 65%),
+    linear-gradient(160deg, rgba(245, 245, 245, 0.07), rgba(20, 20, 20, 0.18));
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.phoneNotch {
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phoneNotch span {
+  width: 44%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(120, 120, 120, 0.5);
+}
+
+.phoneScreen {
+  flex: 1;
+  border-radius: 26px;
+  overflow: hidden;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.phoneHeader {
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+}
+
+.phoneRail {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.phoneRailCard {
+  min-width: 112px;
+  border: 1px solid;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.phoneCards {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.paletteStrip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.paletteStrip span {
+  height: 16px;
+  border-radius: 6px;
+  border: 1px solid;
+}
+
+@media (max-width: 1180px) {
+  .themePage {
+    grid-template-columns: minmax(260px, 340px) 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .themePage {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .sidebarInner {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .galleryViewport {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .themePage {
+    padding: 16px;
+    gap: 18px;
+  }
+
+  .modeSwitch {
+    grid-template-columns: 1fr;
+  }
+
+  .builderSteps {
+    grid-template-columns: 1fr;
+  }
+
+  .builderColorGrid,
+  .builderRangeGroup,
+  .builderSuggestions,
+  .builderFontPresets {
+    grid-template-columns: 1fr;
+  }
+
+  .galleryControls {
+    grid-template-columns: 1fr;
+  }
+
+  .galleryFooter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .galleryButton,
+  .galleryApply {
+    width: 100%;
+  }
+}

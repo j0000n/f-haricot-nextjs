@@ -1,8 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { Providers } from "./providers";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
 
 export const metadata = {
   title: "Haricot Web",
@@ -14,9 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <Providers>
-          <Header />
-          {children}
-          <Footer />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>
       </body>
     </html>

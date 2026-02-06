@@ -1012,6 +1012,15 @@
       "iconSizeDescription": "Adjust the size of navigation icons"
     }
   },
+  "themeBuilder": {
+    "title": "Theme Builder",
+    "subtitle": "Build a custom theme step-by-step and watch it update live.",
+    "created": "Theme created and applied. Share code: {{shareCode}}"
+  },
+  "themeGallery": {
+    "description": "Browse one theme at a time in phone view, then apply instantly.",
+    "applied": "Theme applied."
+  },
   "inventoryCapture": {
     "title": "Update Inventory",
     "cancel": "Cancel",

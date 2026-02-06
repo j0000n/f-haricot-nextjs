@@ -20,7 +20,7 @@ export function Header() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>
           <a href="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <Logo size={75} color1="#A22B2B" color2="#1AC01D" color3="#290EDDF4" />
+            <Logo size={75} color1="#478EC8" color2="#478EC8" color3="#1D154FF4" />
           </a>
         </h1>
         <nav>
@@ -28,8 +28,14 @@ export function Header() {
             <span>{t("common.loading")}</span>
           ) : isAuthenticated && user ? (
             <>
+              <Link href="/kitchen-dashboard" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+                {t("tabs.kitchen")}
+              </Link>
               <Link href="/lists" style={{ textDecoration: "underline", marginRight: "1rem" }}>
                 {t("tabs.lists")}
+              </Link>
+              <Link href="/theme" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+                {t("theme.themesLabel", { defaultValue: "Themes" })}
               </Link>
               {(user as { userType?: string })?.userType === "creator" && (
                 <Link href="/creator" style={{ textDecoration: "underline", marginRight: "1rem" }}>
