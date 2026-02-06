@@ -121,12 +121,12 @@ const TAB_ICON_OPTIONS = [
 ];
 
 const STEP_LABELS = [
-  "Identity",
   "Palette",
   "Typography",
   "Spacing & Shape",
   "Navigation",
   "Review",
+  "Identity",
 ];
 
 const cloneTokens = (tokens: ThemeTokens): ThemeTokens =>
@@ -388,7 +388,7 @@ export function ThemeBuilderWizard({
     [paletteMode, seedHex]
   );
 
-  const canMoveNext = step !== 0 || themeName.trim().length >= 2;
+  const canMoveNext = true;
 
   const diagnostics = useMemo(
     () => [
@@ -574,7 +574,7 @@ export function ThemeBuilderWizard({
 
       <div className={styles.builderStepSummary}>Editing: {STEP_LABELS[step]}</div>
 
-      {step === 0 ? (
+      {step === 5 ? (
         <div className={styles.builderPanel}>
           <label className={styles.builderField}>
             <span>Theme name</span>
@@ -596,7 +596,7 @@ export function ThemeBuilderWizard({
         </div>
       ) : null}
 
-      {step === 1 ? (
+      {step === 0 ? (
         <div className={styles.builderPanel}>
           <div className={styles.builderPaletteHeader}>
             <ColorControl
@@ -670,7 +670,7 @@ export function ThemeBuilderWizard({
         </div>
       ) : null}
 
-      {step === 2 ? (
+      {step === 1 ? (
         <div className={styles.builderPanel}>
           <div className={styles.builderFontPresets}>
             {FONT_PRESETS.map((preset) => (
@@ -767,7 +767,7 @@ export function ThemeBuilderWizard({
         </div>
       ) : null}
 
-      {step === 3 ? (
+      {step === 2 ? (
         <div className={styles.builderPanel}>
           <div className={styles.builderRangeGroup}>
             <RangeControl
@@ -837,7 +837,7 @@ export function ThemeBuilderWizard({
         </div>
       ) : null}
 
-      {step === 4 ? (
+      {step === 3 ? (
         <div className={styles.builderPanel}>
           <label className={styles.builderField}>
             <span>Tab button shape</span>
@@ -981,7 +981,7 @@ export function ThemeBuilderWizard({
         </div>
       ) : null}
 
-      {step === 5 ? (
+      {step === 4 ? (
         <div className={styles.builderPanel}>
           <ThemePhonePreview
             tokens={draftTokens}

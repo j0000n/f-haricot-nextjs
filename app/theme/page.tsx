@@ -957,15 +957,15 @@ function ThemePageContent({
                 mode !== "build"
                   ? null
                   : builderStep === 0
-                  ? "identity"
-                  : builderStep === 1
                   ? "palette"
-                  : builderStep === 2
+                  : builderStep === 1
                   ? "typography"
-                  : builderStep === 3
+                  : builderStep === 2
                   ? "spacing"
-                  : builderStep === 4
+                  : builderStep === 3
                   ? "navigation"
+                  : builderStep === 5
+                  ? "identity"
                   : null
               }
             />
