@@ -14,36 +14,60 @@ export function Header() {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const user = useQuery(api.users.getCurrentUser);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const navLinkStyle = {
+    textDecoration: "underline",
+    whiteSpace: "nowrap",
+  } as const;
 
   return (
     <header>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "0.75rem 1rem",
+          flexWrap: "wrap",
+          width: "100%",
+          minWidth: 0,
+        }}
+      >
         
           <a href="/" style={{ textDecoration: "none", color: "inherit" }}>
             <Logo size={50} color1="#478EC8" color2="#478EC8" color3="#1D154FF4" />
           </a>
         
-        <nav>
+        <nav
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            gap: "0.25rem 0.75rem",
+            minWidth: 0,
+            flex: "1 1 320px",
+          }}
+        >
           {isLoading ? (
             <span>{t("common.loading")}</span>
           ) : isAuthenticated && user ? (
             <>
-              <Link href="/kitchen-dashboard" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+              <Link href="/kitchen-dashboard" style={navLinkStyle}>
                 {t("tabs.kitchen")}
               </Link>
-              <Link href="/lists" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+              <Link href="/lists" style={navLinkStyle}>
                 {t("tabs.lists")}
               </Link>
-              <Link href="/theme" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+              <Link href="/theme" style={navLinkStyle}>
                 {t("theme.themesLabel", { defaultValue: "Themes" })}
               </Link>
               {(user as { userType?: string })?.userType === "creator" && (
-                <Link href="/creator" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+                <Link href="/creator" style={navLinkStyle}>
                   {t("tabs.creator")}
                 </Link>
               )}
               {(user as { userType?: string })?.userType === "vendor" && (
-                <Link href="/vendor" style={{ textDecoration: "underline", marginRight: "1rem" }}>
+                <Link href="/vendor" style={navLinkStyle}>
                   {t("tabs.vendor")}
                 </Link>
               )}

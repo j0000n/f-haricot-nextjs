@@ -1,15 +1,18 @@
 .themePage {
   display: grid;
-  grid-template-columns: minmax(300px, 390px) 1fr;
+  grid-template-columns: minmax(260px, 390px) minmax(0, 1fr);
   gap: 32px;
   padding: 32px;
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 .sidebar {
   width: 100%;
+  min-width: 0;
 }
 
 .sidebarInner {
@@ -21,6 +24,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
 .sectionHeader {
@@ -70,10 +74,11 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .shareInput {
-  flex: 1;
+  flex: 1 1 180px;
   min-width: 0;
   padding: 8px 12px;
   border-radius: 10px;
@@ -82,11 +87,13 @@
 }
 
 .shareButton {
+  flex: 0 0 auto;
   padding: 8px 14px;
   border-radius: 10px;
   border: none;
   font-size: 14px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .notice {
@@ -98,7 +105,9 @@
 
 .preview {
   width: 100%;
+  min-width: 0;
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 .builderRoot {
@@ -466,6 +475,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .galleryTitle {
@@ -629,7 +639,7 @@
 
 @media (max-width: 1180px) {
   .themePage {
-    grid-template-columns: minmax(260px, 340px) 1fr;
+    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
     gap: 24px;
     padding: 24px;
   }

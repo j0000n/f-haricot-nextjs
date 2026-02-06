@@ -114,6 +114,8 @@ body {
   background: #f7f6f2;
   color: #1c1c1c;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: clip;
   display: grid;
   grid-template-rows: auto 1fr auto;
 }

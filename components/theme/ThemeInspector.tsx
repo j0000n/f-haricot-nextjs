@@ -123,13 +123,14 @@ export function ThemeInspector({ definition, tokens }: ThemeInspectorProps) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
+                  flexWrap: "wrap",
                   gap: 12,
                   fontFamily: tokens.fontFamilies.regular,
                   fontSize: tokens.typography.extraSmall,
                   color: tokens.colors.textPrimary,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "1 1 60%", minWidth: 0 }}>
                   {group.isColor && typeof entry.value === "string" ? (
                     <span
                       style={{
@@ -142,9 +143,28 @@ export function ThemeInspector({ definition, tokens }: ThemeInspectorProps) {
                       }}
                     />
                   ) : null}
-                  <span style={{ color: tokens.colors.textSecondary }}>{entry.key}</span>
+                  <span
+                    style={{
+                      color: tokens.colors.textSecondary,
+                      overflowWrap: "anywhere",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {entry.key}
+                  </span>
                 </div>
-                <span style={{ color: tokens.colors.textPrimary }}>{String(entry.value)}</span>
+                <span
+                  style={{
+                    color: tokens.colors.textPrimary,
+                    flex: "1 1 35%",
+                    minWidth: 0,
+                    textAlign: "right",
+                    overflowWrap: "anywhere",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {String(entry.value)}
+                </span>
               </div>
             ))}
           </div>

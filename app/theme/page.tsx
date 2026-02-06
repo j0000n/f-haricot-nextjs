@@ -641,6 +641,9 @@ function ThemePageContent({
         minHeight: "calc(100vh - 200px)",
         backgroundColor: tokens.colors.background,
         color: tokens.colors.textPrimary,
+        width: "100%",
+        minWidth: 0,
+        overflowX: "clip",
       }}
     >
       <div className={styles.themePage}>
