@@ -1,9 +1,8 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@haricot/convex-client";
 import type { Recipe } from "@haricot/convex-client";
 import { useTokens } from "@/hooks/useTheme";
+import { useRecipeCardImageUrl } from "@/hooks/useRecipeCardImageUrl";
 import { calculateIngredientMatch } from "@/utils/inventory";
 import { formatRecipeTime } from "@/utils/recipes";
 import { getRecipeLanguage } from "@/utils/translation";
@@ -25,11 +24,7 @@ export function DashboardRecipeCard({ recipe, userInventory }: DashboardRecipeCa
     userInventory
   );
 
-  const imageUrl = useQuery(api.fileUrls.getRecipeCardImageUrl, {
-    transparentImageSmallStorageId: recipe.transparentImageSmallStorageId,
-    originalImageSmallStorageId: recipe.originalImageSmallStorageId,
-    imageUrls: recipe.imageUrls,
-  });
+  const imageUrl = useRecipeCardImageUrl(recipe);
 
   const hasInventory = userInventory.length > 0;
   const shouldShowMatch = hasInventory && matchPercentage < 100;
